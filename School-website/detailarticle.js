@@ -184,8 +184,8 @@ backToTopButton.addEventListener('click', (e) => {
 
 // Initialize theme if exists (from index.html)
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'blue';
-    const savedBg = localStorage.getItem('bg') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'purple';
+    const savedBg = localStorage.getItem('bg') || 'gradient';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.documentElement.setAttribute('data-bg', savedBg);
 }

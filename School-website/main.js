@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         
         // Initialize active theme and background buttons
-        const savedTheme = localStorage.getItem('theme') || 'blue';
-        const savedBg = localStorage.getItem('bg') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'teal';
+        const savedBg = localStorage.getItem('bg') || 'light-green';
         document.documentElement.setAttribute('data-theme', savedTheme);
         document.documentElement.setAttribute('data-bg', savedBg);
         
@@ -397,7 +397,7 @@ const heroSlides = [
 {
     title: "Shaping Futures with Care",
     description: "Every child deserves encouragement and opportunity. We create a safe, positive space where students learn, express themselves, and grow confidently.",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuG1eUuqEJHSYuFQD8Sd_tXxv4-3_zYA_Qow&s"
 },
 {
     title: "World-Class Building Character Through Education Programs",
@@ -546,8 +546,8 @@ heroCarousel.addEventListener('slide.bs.carousel', function(event) {
 
         // Initialize theme if exists (from index.html)
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'blue';
-            const savedBg = localStorage.getItem('bg') || 'light';
+            const savedTheme = localStorage.getItem('theme') || 'teal';
+            const savedBg = localStorage.getItem('bg') || 'light-green';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.documentElement.setAttribute('data-bg', savedBg);
         }
@@ -572,3 +572,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     elements.forEach(el => observer.observe(el));
 });
+
+
+const messages = [
+"Education shapes character, builds confidence, and opens doors to limitless opportunities.",
+"Learning today empowers students to lead tomorrow with responsibility and integrity.",
+"Knowledge, discipline, and values are the foundation of true success.",
+"Great schools don’t just teach subjects, they nurture future leaders."
+];
+
+const textElement = document.getElementById("motivationText");
+
+const TEN_MINUTES = 10 * 60 * 1000; // 10 minutes in ms
+
+let storedIndex = localStorage.getItem("motivationIndex");
+let lastChange = localStorage.getItem("motivationLastChange");
+
+const now = Date.now();
+
+if (!storedIndex || !lastChange || now - lastChange > TEN_MINUTES) {
+storedIndex = storedIndex ? (parseInt(storedIndex) + 1) % messages.length : 0;
+localStorage.setItem("motivationIndex", storedIndex);
+localStorage.setItem("motivationLastChange", now);
+}
+
+textElement.textContent = messages[storedIndex];
+textElement.style.opacity = 1;
+
+
+
