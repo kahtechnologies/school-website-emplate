@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 300); // wait for layout to settle
     }
 });
-document.addEventListener("DOMContentLoaded", function () {
 
+document.addEventListener("DOMContentLoaded", function () {
     const navbar = document.getElementById('navbarContent');
     const toggler = document.querySelector('.navbar-toggler');
 
@@ -119,59 +119,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
                 e.preventDefault();
                 
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
+                const targetElement = document.querySelector(href);
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // Update active nav link on click
-                    setActiveNavLink(targetId);
                 }
             });
         });
-        
-        // Active nav link on scroll
-        function setActiveNavLink(id) {
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            // Add active class to the corresponding nav link
-            const activeLink = document.querySelector(`.nav-link[href="${id}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-        }
-        
-        function updateActiveNavLinkOnScroll() {
-            const sections = document.querySelectorAll('section[id]');
-            const navHeight = 80; // navbar height offset
-            let current = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (window.pageYOffset >= (sectionTop - navHeight - 50)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            if (current) {
-                setActiveNavLink('#' + current);
-            }
-        }
-        
-        // Update active nav link on scroll
-        window.addEventListener('scroll', updateActiveNavLinkOnScroll);
-        // Also call once on page load
-        updateActiveNavLinkOnScroll();
         
         // Mobile menu toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -598,6 +559,36 @@ localStorage.setItem("motivationLastChange", now);
 
 textElement.textContent = messages[storedIndex];
 textElement.style.opacity = 1;
+
+// NAV LINK SCROLL DETECTION - GLOBAL SCOPE
+function updateNavLinks() {
+    const sections = document.querySelectorAll('section[id]');
+    const scrollPos = window.scrollY + 150;
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        const navLink = document.querySelector(`#navbarContent .nav-link[href="#${section.id}"]`);
+        
+        if (navLink) {
+            if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                navLink.classList.add('active');
+            } else {
+                navLink.classList.remove('active');
+            }
+        }
+    });
+}
+
+// Attach scroll listener
+window.addEventListener('scroll', updateNavLinks);
+
+// Call on page load
+window.addEventListener('load', updateNavLinks);
+
+// Also call with delay to ensure DOM is ready
+setTimeout(updateNavLinks, 100);
 
 
 

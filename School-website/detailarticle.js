@@ -111,15 +111,6 @@ async function loadArticle() {
             articleBody.appendChild(p);
         });
 
-        // Update YouTube video link
-        const videoSection = document.getElementById('videoSection');
-        const youtubeLink = document.getElementById('youtubeLink');
-        if (article.youtube) {
-            youtubeLink.href = article.youtube;
-        } else {
-            videoSection.style.display = 'none';
-        }
-
         // Load related articles
         loadRelatedArticles(data.articles, article.category, articleId);
 

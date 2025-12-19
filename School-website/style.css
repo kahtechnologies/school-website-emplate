@@ -1918,4 +1918,7 @@ transform: translateY(-5px);
     .gallery-grid {
         grid-template-columns: 1fr;
     }
+    .copyright{
+        font-size: 0.65rem;
+    }
 }
