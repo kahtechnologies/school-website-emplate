@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 300); // wait for layout to settle
     }
 });
-document.addEventListener("DOMContentLoaded", function () {
 
+document.addEventListener("DOMContentLoaded", function () {
     const navbar = document.getElementById('navbarContent');
     const toggler = document.querySelector('.navbar-toggler');
 
@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         
         // Initialize active theme and background buttons
-        const savedTheme = localStorage.getItem('theme') || 'blue';
-        const savedBg = localStorage.getItem('bg') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'teal';
+        const savedBg = localStorage.getItem('bg') || 'light-green';
         document.documentElement.setAttribute('data-theme', savedTheme);
         document.documentElement.setAttribute('data-bg', savedBg);
         
@@ -119,59 +119,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
                 e.preventDefault();
                 
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
+                const targetElement = document.querySelector(href);
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // Update active nav link on click
-                    setActiveNavLink(targetId);
                 }
             });
         });
-        
-        // Active nav link on scroll
-        function setActiveNavLink(id) {
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            // Add active class to the corresponding nav link
-            const activeLink = document.querySelector(`.nav-link[href="${id}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-        }
-        
-        function updateActiveNavLinkOnScroll() {
-            const sections = document.querySelectorAll('section[id]');
-            const navHeight = 80; // navbar height offset
-            let current = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (window.pageYOffset >= (sectionTop - navHeight - 50)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            if (current) {
-                setActiveNavLink('#' + current);
-            }
-        }
-        
-        // Update active nav link on scroll
-        window.addEventListener('scroll', updateActiveNavLinkOnScroll);
-        // Also call once on page load
-        updateActiveNavLinkOnScroll();
         
         // Mobile menu toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -397,7 +358,7 @@ const heroSlides = [
 {
     title: "Shaping Futures with Care",
     description: "Every child deserves encouragement and opportunity. We create a safe, positive space where students learn, express themselves, and grow confidently.",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuG1eUuqEJHSYuFQD8Sd_tXxv4-3_zYA_Qow&s"
 },
 {
     title: "World-Class Building Character Through Education Programs",
@@ -546,8 +507,8 @@ heroCarousel.addEventListener('slide.bs.carousel', function(event) {
 
         // Initialize theme if exists (from index.html)
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'blue';
-            const savedBg = localStorage.getItem('bg') || 'light';
+            const savedTheme = localStorage.getItem('theme') || 'teal';
+            const savedBg = localStorage.getItem('bg') || 'light-green';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.documentElement.setAttribute('data-bg', savedBg);
         }
@@ -572,3 +533,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     elements.forEach(el => observer.observe(el));
 });
+
+
+const messages = [
+"Education shapes character, builds confidence, and opens doors to limitless opportunities.",
+"Learning today empowers students to lead tomorrow with responsibility and integrity.",
+"Knowledge, discipline, and values are the foundation of true success.",
+"Great schools don’t just teach subjects, they nurture future leaders."
+];
+
+const textElement = document.getElementById("motivationText");
+
+const TEN_MINUTES = 10 * 60 * 1000; // 10 minutes in ms
+
+let storedIndex = localStorage.getItem("motivationIndex");
+let lastChange = localStorage.getItem("motivationLastChange");
+
+const now = Date.now();
+
+if (!storedIndex || !lastChange || now - lastChange > TEN_MINUTES) {
+storedIndex = storedIndex ? (parseInt(storedIndex) + 1) % messages.length : 0;
+localStorage.setItem("motivationIndex", storedIndex);
+localStorage.setItem("motivationLastChange", now);
+}
+
+textElement.textContent = messages[storedIndex];
+textElement.style.opacity = 1;
+
+// NAV LINK SCROLL DETECTION - GLOBAL SCOPE
+function updateNavLinks() {
+    const sections = document.querySelectorAll('section[id]');
+    const scrollPos = window.scrollY + 150;
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        const navLink = document.querySelector(`#navbarContent .nav-link[href="#${section.id}"]`);
+        
+        if (navLink) {
+            if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                navLink.classList.add('active');
+            } else {
+                navLink.classList.remove('active');
+            }
+        }
+    });
+}
+
+// Attach scroll listener
+window.addEventListener('scroll', updateNavLinks);
+
+// Call on page load
+window.addEventListener('load', updateNavLinks);
+
+// Also call with delay to ensure DOM is ready
+setTimeout(updateNavLinks, 100);
+
+
+

@@ -111,15 +111,6 @@ async function loadArticle() {
             articleBody.appendChild(p);
         });
 
-        // Update YouTube video link
-        const videoSection = document.getElementById('videoSection');
-        const youtubeLink = document.getElementById('youtubeLink');
-        if (article.youtube) {
-            youtubeLink.href = article.youtube;
-        } else {
-            videoSection.style.display = 'none';
-        }
-
         // Load related articles
         loadRelatedArticles(data.articles, article.category, articleId);
 
@@ -184,8 +175,8 @@ backToTopButton.addEventListener('click', (e) => {
 
 // Initialize theme if exists (from index.html)
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'blue';
-    const savedBg = localStorage.getItem('bg') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'purple';
+    const savedBg = localStorage.getItem('bg') || 'gradient';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.documentElement.setAttribute('data-bg', savedBg);
 }
