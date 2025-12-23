@@ -2031,6 +2031,36 @@ transform: translateY(-5px);
     display: none;
 }
 
+/* Gallery Pagination */
+.gallery-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.pagination-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(67, 97, 238, 0.3);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.pagination-dot:hover {
+    background-color: rgba(67, 97, 238, 0.6);
+}
+
+.pagination-dot.active {
+    background-color: var(--primary-color);
+    border-color: var(--secondary-color);
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 0 8px rgba(67, 97, 238, 0.5);
+}
+
 /* Responsive Gallery Grid */
 @media (max-width: 1200px) {
     .gallery-grid {
@@ -2169,6 +2199,38 @@ transform: translateY(-5px);
     font-size: 1.2rem;
 }
 
+.lightbox-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(67, 97, 238, 0.8);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 2001;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-arrow:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-prev {
+    left: 20px;
+}
+
+.lightbox-next {
+    right: 20px;
+}
+
 /* Responsive Lightbox */
 @media (max-width: 768px) {
     .lightbox-close {
@@ -2194,6 +2256,20 @@ transform: translateY(-5px);
     .lightbox-btn {
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
+    }
+    
+    .lightbox-arrow {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .lightbox-prev {
+        left: 10px;
+    }
+    
+    .lightbox-next {
+        right: 10px;
     }
 }
 
@@ -2226,5 +2302,19 @@ transform: translateY(-5px);
     
     .lightbox-btn i {
         font-size: 1rem;
+    }
+    
+    .lightbox-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .lightbox-prev {
+        left: 5px;
+    }
+    
+    .lightbox-next {
+        right: 5px;
     }
 }
