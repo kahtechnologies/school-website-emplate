@@ -659,3 +659,205 @@ changeText();
 
 // change every 8 seconds
 setInterval(changeText, 8000);
+
+// ===== GALLERY SECTION =====
+// First set of images (initial display - 6 images)
+const initialGalleryImages = [
+    { src: 'Images/sports.jpeg', alt: 'Sports Activities' },
+    { src: 'Images/yoga.jpeg', alt: 'Yoga Session' },
+    { src: 'Images/independence.jpeg', alt: 'Independence Day' },
+    { src: 'Images/annual.jpeg', alt: 'Annual Events' },
+    { src: 'Images/H1.jpeg', alt: 'School Events' },
+    { src: 'Images/k2.jpeg', alt: 'Karate Training' }
+];
+
+// Second set of images (shown when "More Photos" is clicked)
+const moreGalleryImages = [
+    { src: 'Images/a22.jpeg', alt: 'School Activities' },
+    { src: 'Images/envi.jpeg', alt: 'Environmental Activities' },
+    { src: 'Images/event2.jpeg', alt: 'Event Celebrations' },
+    { src: 'Images/A1.png', alt: 'School Campus' },
+    { src: 'Images/A2.jpg', alt: 'Student Learning' },
+    { src: 'Images/eve3.jpg', alt: 'Evening Events' }
+];
+
+let currentGallerySet = 'initial';
+let galleryIsInitial = true;
+
+// Function to render gallery items
+function renderGalleryItems(images) {
+    const galleryContainer = document.getElementById('galleryContainer');
+    galleryContainer.innerHTML = '';
+    
+    images.forEach((image, index) => {
+        const col = document.createElement('div');
+        col.className = 'col-12';
+        
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        
+        const img = document.createElement('img');
+        img.src = image.src;
+        img.alt = image.alt;
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function() {
+            openLightbox(image.src);
+        });
+        img.addEventListener('error', function() {
+            console.warn(`Failed to load image: ${image.src}`);
+            this.style.display = 'none';
+            galleryItem.style.backgroundColor = '#e9ecef';
+            galleryItem.style.display = 'flex';
+            galleryItem.style.alignItems = 'center';
+            galleryItem.style.justifyContent = 'center';
+            const errorMsg = document.createElement('p');
+            errorMsg.style.color = '#999';
+            errorMsg.style.textAlign = 'center';
+            errorMsg.textContent = 'Image not found';
+            galleryItem.appendChild(errorMsg);
+        });
+        img.addEventListener('load', function() {
+            console.log(`Successfully loaded image: ${image.src}`);
+        });
+        
+        galleryItem.appendChild(img);
+        col.appendChild(galleryItem);
+        galleryContainer.appendChild(col);
+    });
+}
+
+// Function to load more photos
+function loadMorePhotos() {
+    if (galleryIsInitial) {
+        renderGalleryItems(moreGalleryImages);
+        document.getElementById('morePhotosBtn').innerHTML = 'Back to Gallery <i class="fas fa-arrow-left ms-2"></i>';
+        galleryIsInitial = false;
+    } else {
+        renderGalleryItems(initialGalleryImages);
+        document.getElementById('morePhotosBtn').innerHTML = 'More Photos <i class="fas fa-arrow-right ms-2"></i>';
+        galleryIsInitial = true;
+    }
+}
+
+// Initialize gallery on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('galleryContainer')) {
+        renderGalleryItems(initialGalleryImages);
+    }
+});
+
+// ===== LIGHTBOX FUNCTIONALITY =====
+let currentZoomLevel = 1;
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 3;
+const ZOOM_STEP = 0.2;
+
+// Open lightbox
+function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    
+    lightboxImage.src = imageSrc;
+    lightbox.classList.add('active');
+    currentZoomLevel = 1;
+    resetImageZoom();
+    
+    // Prevent body scroll when lightbox is open
+    document.body.style.overflow = 'hidden';
+}
+
+// Close lightbox
+function closeLightbox() {
+    const lightbox = document.getElementById('imageLightbox');
+    lightbox.classList.remove('active');
+    currentZoomLevel = 1;
+    resetImageZoom();
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+}
+
+// Zoom in function
+function zoomIn() {
+    if (currentZoomLevel < MAX_ZOOM) {
+        currentZoomLevel += ZOOM_STEP;
+        applyZoom();
+    }
+}
+
+// Zoom out function
+function zoomOut() {
+    if (currentZoomLevel > MIN_ZOOM) {
+        currentZoomLevel -= ZOOM_STEP;
+        applyZoom();
+    }
+}
+
+// Reset zoom
+function resetImageZoom() {
+    currentZoomLevel = 1;
+    applyZoom();
+}
+
+// Apply zoom transformation
+function applyZoom() {
+    const lightboxImage = document.getElementById('lightboxImage');
+    lightboxImage.style.transform = `scale(${currentZoomLevel})`;
+}
+
+// Event listeners for lightbox controls
+function initializeLightboxControls() {
+    const lightbox = document.getElementById('imageLightbox');
+    const closeBtn = document.querySelector('.lightbox-close');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const resetZoomBtn = document.getElementById('resetZoomBtn');
+    
+    if (!lightbox || !closeBtn) return; // Exit if elements don't exist
+    
+    // Close lightbox
+    closeBtn.addEventListener('click', closeLightbox);
+    
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    
+    // Zoom controls
+    if (zoomInBtn) zoomInBtn.addEventListener('click', zoomIn);
+    if (zoomOutBtn) zoomOutBtn.addEventListener('click', zoomOut);
+    if (resetZoomBtn) resetZoomBtn.addEventListener('click', resetImageZoom);
+}
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('imageLightbox');
+    if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+        closeLightbox();
+    }
+});
+
+// Keyboard shortcuts for zoom
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('imageLightbox');
+    if (!lightbox || !lightbox.classList.contains('active')) return;
+    
+    if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        zoomIn();
+    } else if (e.key === '-') {
+        e.preventDefault();
+        zoomOut();
+    } else if (e.key === '0') {
+        e.preventDefault();
+        resetImageZoom();
+    }
+});
+
+// Initialize lightbox when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeLightboxControls);
+} else {
+    initializeLightboxControls();
+}
