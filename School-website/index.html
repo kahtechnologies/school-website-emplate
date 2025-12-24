@@ -611,6 +611,14 @@
             <div class="row gallery-grid" id="galleryContainer">
                 <!-- Gallery items will be inserted here by JavaScript -->
             </div>
+            
+            <!-- Pagination Indicator -->
+            <div class="text-center mt-4 mb-4">
+                <div class="gallery-pagination" id="galleryPagination">
+                    <!-- Pagination dots will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
             <div class="text-center mt-5">
                 <button class="btn btn-primary" id="morePhotosBtn" onclick="loadMorePhotos()">
                     More Photos <i class="fas fa-arrow-right ms-2"></i>
@@ -757,14 +765,20 @@
     <div id="imageLightbox" class="lightbox-modal">
         <span class="lightbox-close">&times;</span>
         <div class="lightbox-content">
+            <button id="lightboxPrevBtn" class="lightbox-arrow lightbox-prev" title="Previous Image">
+                <i class="fas fa-chevron-left"></i>
+            </button>
             <img id="lightboxImage" src="" alt="Gallery Image" class="lightbox-image">
+            <button id="lightboxNextBtn" class="lightbox-arrow lightbox-next" title="Next Image">
+                <i class="fas fa-chevron-right"></i>
+            </button>
             <div class="lightbox-controls">
                 <button id="zoomInBtn" class="lightbox-btn" title="Zoom In">
                     <i class="fas fa-plus"></i>
                 </button>
                 <button id="zoomOutBtn" class="lightbox-btn" title="Zoom Out">
                     <i class="fas fa-minus"></i>
-                </button>
+                </button>   
             </div>
         </div>
     </div>

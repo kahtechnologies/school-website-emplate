@@ -661,28 +661,92 @@ changeText();
 setInterval(changeText, 8000);
 
 // ===== GALLERY SECTION =====
-// First set of images (initial display - 6 images)
-const initialGalleryImages = [
+// All gallery images organized in sets of 6
+const allGalleryPhotos = [
+    { src: 'Images/g1.jpeg', alt: 'Gallery Image 1' },
+    { src: 'Images/g2.jpeg', alt: 'Gallery Image 14' },
+    { src: 'Images/g3.jpeg', alt: 'Gallery Image 13' },
+    { src: 'Images/g4.jpeg', alt: 'Gallery Image 4' },
+    { src: 'Images/g5.jpeg', alt: 'Gallery Image 5' },
+    { src: 'Images/g6.jpeg', alt: 'Gallery Image 6' },
+    { src: 'Images/g7.jpeg', alt: 'Gallery Image 7' },
+    { src: 'Images/g8.jpeg', alt: 'Gallery Image 8' },
+    { src: 'Images/g9.jpeg', alt: 'Gallery Image 9' },
+    { src: 'Images/g10.jpeg', alt: 'Gallery Image 10' },
+    { src: 'Images/g11.jpeg', alt: 'Gallery Image 11' },
+    { src: 'Images/g12.jpeg', alt: 'Gallery Image 12' },
+    { src: 'Images/g13.jpeg', alt: 'Gallery Image 3' },
+    { src: 'Images/g14.jpeg', alt: 'Gallery Image 2' },
+    { src: 'Images/n1.jpeg', alt: 'School Activities 6' },
+    { src: 'Images/n2.jpeg', alt: 'School Activities 7' },
+    { src: 'Images/n3.jpeg', alt: 'School Activities 8' },
+    { src: 'Images/n4.jpeg', alt: 'School Activities 9' },
     { src: 'Images/sports.jpeg', alt: 'Sports Activities' },
     { src: 'Images/yoga.jpeg', alt: 'Yoga Session' },
     { src: 'Images/independence.jpeg', alt: 'Independence Day' },
     { src: 'Images/annual.jpeg', alt: 'Annual Events' },
     { src: 'Images/H1.jpeg', alt: 'School Events' },
-    { src: 'Images/k2.jpeg', alt: 'Karate Training' }
-];
-
-// Second set of images (shown when "More Photos" is clicked)
-const moreGalleryImages = [
+    { src: 'Images/k2.jpeg', alt: 'Karate Training' },
     { src: 'Images/a22.jpeg', alt: 'School Activities' },
     { src: 'Images/envi.jpeg', alt: 'Environmental Activities' },
     { src: 'Images/event2.jpeg', alt: 'Event Celebrations' },
-    { src: 'Images/A1.png', alt: 'School Campus' },
-    { src: 'Images/A2.jpg', alt: 'Student Learning' },
-    { src: 'Images/eve3.jpg', alt: 'Evening Events' }
+    { src: 'Images/eve3.jpg', alt: 'Evening Events' },
+    { src: 'Images/karate.jpeg', alt: 'Karate Training 2' },
+    { src: 'Images/d1.jpeg', alt: 'School Activities 1' },
+    { src: 'Images/d2.jpeg', alt: 'School Activities 2' },
+    { src: 'Images/d3.jpeg', alt: 'School Activities 3' },
+    { src: 'Images/d5.jpeg', alt: 'School Activities 5' },
+    { src: 'Images/n5.jpeg', alt: 'School Activities 10' }
 ];
 
-let currentGallerySet = 'initial';
-let galleryIsInitial = true;
+const PHOTOS_PER_PAGE = 6;
+let currentGalleryPage = 0;
+
+// Function to get photos for current page
+function getPhotosForCurrentPage() {
+    const startIndex = currentGalleryPage * PHOTOS_PER_PAGE;
+    const endIndex = startIndex + PHOTOS_PER_PAGE;
+    return allGalleryPhotos.slice(startIndex, endIndex);
+}
+
+// Function to check if there are more photos
+function hasMorePhotos() {
+    const nextPageStart = (currentGalleryPage + 1) * PHOTOS_PER_PAGE;
+    return nextPageStart < allGalleryPhotos.length;
+}
+
+// Function to update pagination dots
+function updatePaginationDots() {
+    const totalPages = Math.ceil(allGalleryPhotos.length / PHOTOS_PER_PAGE);
+    const paginationContainer = document.getElementById('galleryPagination');
+    paginationContainer.innerHTML = '';
+    
+    for (let i = 0; i < totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'pagination-dot';
+        if (i === currentGalleryPage) {
+            dot.classList.add('active');
+        }
+        dot.addEventListener('click', function() {
+            currentGalleryPage = i;
+            const photosToShow = getPhotosForCurrentPage();
+            renderGalleryItems(photosToShow);
+            updatePaginationDots();
+            updateMorePhotosButton();
+        });
+        paginationContainer.appendChild(dot);
+    }
+}
+
+// Function to update More Photos button text
+function updateMorePhotosButton() {
+    const btn = document.getElementById('morePhotosBtn');
+    if (hasMorePhotos()) {
+        btn.innerHTML = 'More Photos <i class="fas fa-arrow-right ms-2"></i>';
+    } else {
+        btn.innerHTML = 'Back to Gallery <i class="fas fa-arrow-left ms-2"></i>';
+    }
+}
 
 // Function to render gallery items
 function renderGalleryItems(images) {
@@ -728,21 +792,31 @@ function renderGalleryItems(images) {
 
 // Function to load more photos
 function loadMorePhotos() {
-    if (galleryIsInitial) {
-        renderGalleryItems(moreGalleryImages);
-        document.getElementById('morePhotosBtn').innerHTML = 'Back to Gallery <i class="fas fa-arrow-left ms-2"></i>';
-        galleryIsInitial = false;
+    if (hasMorePhotos()) {
+        // Move to next page
+        currentGalleryPage++;
+        const photosToShow = getPhotosForCurrentPage();
+        renderGalleryItems(photosToShow);
+        updatePaginationDots();
+        updateMorePhotosButton();
     } else {
-        renderGalleryItems(initialGalleryImages);
-        document.getElementById('morePhotosBtn').innerHTML = 'More Photos <i class="fas fa-arrow-right ms-2"></i>';
-        galleryIsInitial = true;
+        // Back to first page
+        currentGalleryPage = 0;
+        const photosToShow = getPhotosForCurrentPage();
+        renderGalleryItems(photosToShow);
+        updatePaginationDots();
+        updateMorePhotosButton();
     }
 }
 
 // Initialize gallery on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('galleryContainer')) {
-        renderGalleryItems(initialGalleryImages);
+        currentGalleryPage = 0;
+        const photosToShow = getPhotosForCurrentPage();
+        renderGalleryItems(photosToShow);
+        updatePaginationDots();
+        updateMorePhotosButton();
     }
 });
 
@@ -752,15 +826,22 @@ const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.2;
 
+// Gallery array tracking for arrow navigation
+let currentImageIndex = 0;
+
 // Open lightbox
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('imageLightbox');
     const lightboxImage = document.getElementById('lightboxImage');
     
+    // Find current index in all gallery photos
+    currentImageIndex = allGalleryPhotos.findIndex(img => img.src === imageSrc);
+    
     lightboxImage.src = imageSrc;
     lightbox.classList.add('active');
     currentZoomLevel = 1;
     resetImageZoom();
+    updateArrowButtonVisibility();
     
     // Prevent body scroll when lightbox is open
     document.body.style.overflow = 'hidden';
@@ -805,6 +886,43 @@ function applyZoom() {
     lightboxImage.style.transform = `scale(${currentZoomLevel})`;
 }
 
+// Navigate to next image
+function nextGalleryImage() {
+    if (currentImageIndex < allGalleryPhotos.length - 1) {
+        currentImageIndex++;
+        const lightboxImage = document.getElementById('lightboxImage');
+        lightboxImage.src = allGalleryPhotos[currentImageIndex].src;
+        currentZoomLevel = 1;
+        resetImageZoom();
+        updateArrowButtonVisibility();
+    }
+}
+
+// Navigate to previous image
+function prevGalleryImage() {
+    if (currentImageIndex > 0) {
+        currentImageIndex--;
+        const lightboxImage = document.getElementById('lightboxImage');
+        lightboxImage.src = allGalleryPhotos[currentImageIndex].src;
+        currentZoomLevel = 1;
+        resetImageZoom();
+        updateArrowButtonVisibility();
+    }
+}
+
+// Update arrow button visibility
+function updateArrowButtonVisibility() {
+    const prevBtn = document.getElementById('lightboxPrevBtn');
+    const nextBtn = document.getElementById('lightboxNextBtn');
+    
+    if (prevBtn) {
+        prevBtn.style.display = currentImageIndex > 0 ? 'block' : 'none';
+    }
+    if (nextBtn) {
+        nextBtn.style.display = currentImageIndex < allGalleryPhotos.length - 1 ? 'block' : 'none';
+    }
+}
+
 // Event listeners for lightbox controls
 function initializeLightboxControls() {
     const lightbox = document.getElementById('imageLightbox');
@@ -812,6 +930,8 @@ function initializeLightboxControls() {
     const zoomInBtn = document.getElementById('zoomInBtn');
     const zoomOutBtn = document.getElementById('zoomOutBtn');
     const resetZoomBtn = document.getElementById('resetZoomBtn');
+    const prevBtn = document.getElementById('lightboxPrevBtn');
+    const nextBtn = document.getElementById('lightboxNextBtn');
     
     if (!lightbox || !closeBtn) return; // Exit if elements don't exist
     
@@ -828,6 +948,22 @@ function initializeLightboxControls() {
     if (zoomInBtn) zoomInBtn.addEventListener('click', zoomIn);
     if (zoomOutBtn) zoomOutBtn.addEventListener('click', zoomOut);
     if (resetZoomBtn) resetZoomBtn.addEventListener('click', resetImageZoom);
+    
+    // Arrow navigation
+    if (prevBtn) prevBtn.addEventListener('click', prevGalleryImage);
+    if (nextBtn) nextBtn.addEventListener('click', nextGalleryImage);
+    
+    // Keyboard arrow navigation
+    document.addEventListener('keydown', function(e) {
+        if (!lightbox || !lightbox.classList.contains('active')) return;
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevGalleryImage();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextGalleryImage();
+        }
+    });
 }
 
 // Close on Escape key
