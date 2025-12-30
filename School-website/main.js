@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateActiveNavLink();
         }, 50);
     }, { passive: true });
-    
+
     // Initial call on page load
     setTimeout(() => {
         updateActiveNavLink();
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Initialize active theme and background buttons
-        const savedTheme = localStorage.getItem('theme') || 'blue';
+        const savedTheme = localStorage.getItem('theme') || 'teal';
         const savedBg = localStorage.getItem('bg') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         document.documentElement.setAttribute('data-bg', savedBg);
@@ -448,22 +448,18 @@ const heroSlides = [
 {
      title: "Empowering Young Minds for the Future",
     description: "Our school fosters academic excellence, creativity, and strong values in a nurturing environment that supports every child’s journey toward success.",
-    image: "https://d6pldk4490zsr.cloudfront.net/wp-content/uploads/2019/06/5.jpg"
+},
+{
+    title: "Annual Day Celebration 2025",
+    description: "Our Annual Day 2025 is a grand celebration of talent, creativity, and achievements. The event showcases cultural performances, academic excellence, and the holistic development of students, reflecting a year filled with learning, discipline, and success.",
 },
 {
        title: "A Place Where Every Child Thrives",
     description: "We provide a safe and supportive learning atmosphere where students are encouraged to explore, ask questions, and grow with confidence.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
-},
-{
-    title: "Building Character Alongside Knowledge",
-    description: "Beyond academics, we focus on discipline, moral values, and leadership skills to shape responsible and compassionate individuals.",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
 },
 {
      title: "Learning Beyond the Classroom",
     description: "Through sports, arts, cultural activities, and experiential learning, we ensure the holistic development of every student.",
-    image: "https://images.unsplash.com/photo-1524178234883-043d5c3f3cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
 }
 ];
 
@@ -607,7 +603,7 @@ heroCarousel.addEventListener('slide.bs.carousel', function(event) {
 
         // Initialize theme if exists (from index.html)
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'blue';
+            const savedTheme = localStorage.getItem('theme') || 'teal';
             const savedBg = localStorage.getItem('bg') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.documentElement.setAttribute('data-bg', savedBg);
@@ -660,36 +656,42 @@ changeText();
 // change every 8 seconds
 setInterval(changeText, 8000);
 // ===== GALLERY SECTION =====
-// First set of images (initial display - 6 images)
-const initialGalleryImages = [  
-   { src: 'Images/Events/republic.png', alt: 'Sports Activities' },
-   { src: 'Images/Events/eve2.jpg', alt: 'Yoga Session' },
-   { src: 'Images/Events/fancydress.png', alt: 'Independence Day' },
-   { src: 'Images/Events/trip.jpg', alt: 'Annual Events' },
-   { src: 'Images/h1.jpeg', alt: 'School Events' },
-   { src: 'Images/Achievements/A3.png', alt: 'Karate Training' }
+// All gallery images
+const allGalleryImages = [
+   { src: 'Images/Events/annual.png', alt: 'Annual Event 1' },
+   { src: 'Images/Events/annual1.png', alt: 'Annual Event 2' },
+   { src: 'Images/Events/annual2.png', alt: 'Annual Event 3' },
+   { src: 'Images/Events/annual3.png', alt: 'Annual Event 4' },
+   { src: 'Images/Events/annual4.png', alt: 'Annual Event 5' },
+   { src: 'Images/Events/annual5.png', alt: 'Annual Event 6' },
+   { src: 'Images/Events/annual6.png', alt: 'Annual Event 7' },
+   { src: 'Images/Events/annual7.png', alt: 'Annual Event 8' },
+   { src: 'Images/Events/annual8.png', alt: 'Annual Event 9' },
+   { src: 'Images/Events/annual9.png', alt: 'Annual Event 10' },
+   { src: 'Images/Events/annual10.png', alt: 'Annual Event 11' },
+   { src: 'Images/Events/annual11.png', alt: 'Annual Event 12' },
+   { src: 'Images/Events/republic.png', alt: 'Republic Day' },
+   { src: 'Images/Events/eve2.jpg', alt: 'Event 2' },
+   { src: 'Images/Events/fancydress.png', alt: 'Fancy Dress' },
+   { src: 'Images/Events/trip.jpg', alt: 'Trip' },
+   { src: 'Images/Events/evi.png', alt: 'Environmental Activity' },
+   { src: 'Images/Events/ooty.png', alt: 'Ooty Trip' }
 ];
 
-// Second set of images (shown when "More Photos" is clicked)
-const moreGalleryImages = [
-   { src: 'Images/Achievements/G2.png', alt: 'School Activities' },
-   { src: 'Images/Events/evi.png', alt: 'Environmental Activities' },
-   { src: 'Images/Achievements/PB2.png', alt: 'Event Celebrations' },
-   { src: 'Images/Achievements/Graduation.png', alt: 'School Campus' },
-   { src: 'Images/Achievements/Prathibhakaranji.jpg', alt: 'Student Learning' },
-   { src: 'Images/Events/ooty.png', alt: 'Evening Events' }
-];
+let currentGalleryPage = 0;
+const IMAGES_PER_PAGE = 6;
 
-let currentGallerySet = 'initial';
-let galleryIsInitial = true;
-
-// Function to render gallery items
-function renderGalleryItems(images) {
+// Function to render gallery items with pagination
+function renderGalleryItems(page = 0) {
    const galleryContainer = document.getElementById('galleryContainer');
    galleryContainer.innerHTML = '';
    galleryContainer.className = 'row g-4';
-  
-   images.forEach((image, index) => {
+   
+   const startIndex = page * IMAGES_PER_PAGE;
+   const endIndex = startIndex + IMAGES_PER_PAGE;
+   const imagesToDisplay = allGalleryImages.slice(startIndex, endIndex);
+   
+   imagesToDisplay.forEach((image, index) => {
        const col = document.createElement('div');
        col.className = 'col-md-6 col-lg-4';
       
@@ -701,7 +703,8 @@ function renderGalleryItems(images) {
        img.alt = image.alt;
        img.style.cursor = 'pointer';
        img.addEventListener('click', function() {
-           openLightbox(image.src);
+           const clickedImageIndex = allGalleryImages.findIndex(item => item.src === image.src);
+           openLightbox(image.src, clickedImageIndex);
        });
        img.addEventListener('error', function() {
            console.warn(`Failed to load image: ${image.src}`);
@@ -724,43 +727,59 @@ function renderGalleryItems(images) {
        col.appendChild(galleryItem);
        galleryContainer.appendChild(col);
    });
+   
+   updatePaginationControls();
 }
 
-// Function to load more photos
-function loadMorePhotos() {
-   if (galleryIsInitial) {
-       renderGalleryItems(moreGalleryImages);
-       document.getElementById('morePhotosBtn').innerHTML = 'Back to Gallery <i class="fas fa-arrow-left ms-2"></i>';
-       galleryIsInitial = false;
+// Function to update pagination controls
+function updatePaginationControls() {
+   const morePhotosBtn = document.getElementById('morePhotosBtn');
+   if (!morePhotosBtn) return;
+   
+   const totalPages = Math.ceil(allGalleryImages.length / IMAGES_PER_PAGE);
+   
+   if (totalPages <= 1) {
+       morePhotosBtn.style.display = 'none';
    } else {
-       renderGalleryItems(initialGalleryImages);
-       document.getElementById('morePhotosBtn').innerHTML = 'More Photos <i class="fas fa-arrow-right ms-2"></i>';
-       galleryIsInitial = true;
+       morePhotosBtn.style.display = 'inline-block';
+       morePhotosBtn.innerHTML = `Page ${currentGalleryPage + 1} of ${totalPages} <i class="fas fa-arrow-right ms-2"></i>`;
    }
+}
+
+// Function to load more photos (next page)
+function loadMorePhotos() {
+   const totalPages = Math.ceil(allGalleryImages.length / IMAGES_PER_PAGE);
+   currentGalleryPage = (currentGalleryPage + 1) % totalPages;
+   renderGalleryItems(currentGalleryPage);
+   window.scrollTo({ top: document.getElementById('gallery').offsetTop, behavior: 'smooth' });
 }
 
 // Initialize gallery on page load
 document.addEventListener('DOMContentLoaded', function() {
    if (document.getElementById('galleryContainer')) {
-       renderGalleryItems(initialGalleryImages);
+       currentGalleryPage = 0;
+       renderGalleryItems(0);
    }
 });
 
 // ===== LIGHTBOX FUNCTIONALITY =====
 let currentZoomLevel = 1;
+let currentLightboxImageIndex = 0;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.2;
 
 // Open lightbox
-function openLightbox(imageSrc) {
+function openLightbox(imageSrc, imageIndex = 0) {
    const lightbox = document.getElementById('imageLightbox');
    const lightboxImage = document.getElementById('lightboxImage');
-  
+   
+   currentLightboxImageIndex = imageIndex;
    lightboxImage.src = imageSrc;
    lightbox.classList.add('active');
    currentZoomLevel = 1;
    resetImageZoom();
+   updateLightboxPagination();
   
    // Prevent body scroll when lightbox is open
    document.body.style.overflow = 'hidden';
@@ -776,6 +795,58 @@ function closeLightbox() {
    // Restore body scroll
    document.body.style.overflow = 'auto';
 }
+
+// Navigate to next image in lightbox
+function nextLightboxImage() {
+   if (currentLightboxImageIndex < allGalleryImages.length - 1) {
+       currentLightboxImageIndex++;
+   } else {
+       currentLightboxImageIndex = 0; // Loop back to first
+   }
+   updateLightboxImage();
+}
+
+// Navigate to previous image in lightbox
+function prevLightboxImage() {
+   if (currentLightboxImageIndex > 0) {
+       currentLightboxImageIndex--;
+   } else {
+       currentLightboxImageIndex = allGalleryImages.length - 1; // Loop to last
+   }
+   updateLightboxImage();
+}
+
+// Update lightbox image
+function updateLightboxImage() {
+   const lightboxImage = document.getElementById('lightboxImage');
+   const image = allGalleryImages[currentLightboxImageIndex];
+   lightboxImage.src = image.src;
+   currentZoomLevel = 1;
+   resetImageZoom();
+   updateLightboxPagination();
+}
+
+// Update lightbox pagination info
+function updateLightboxPagination() {
+   const pagination = document.getElementById('lightboxPagination');
+   if (pagination) {
+       pagination.textContent = `${currentLightboxImageIndex + 1} / ${allGalleryImages.length}`;
+   }
+}
+
+// Keyboard navigation in lightbox
+document.addEventListener('keydown', function(e) {
+   const lightbox = document.getElementById('imageLightbox');
+   if (!lightbox || !lightbox.classList.contains('active')) return;
+   
+   if (e.key === 'ArrowRight') {
+       e.preventDefault();
+       nextLightboxImage();
+   } else if (e.key === 'ArrowLeft') {
+       e.preventDefault();
+       prevLightboxImage();
+   }
+});
 
 // Zoom in function
 function zoomIn() {
@@ -812,6 +883,8 @@ function initializeLightboxControls() {
    const zoomInBtn = document.getElementById('zoomInBtn');
    const zoomOutBtn = document.getElementById('zoomOutBtn');
    const resetZoomBtn = document.getElementById('resetZoomBtn');
+   const nextBtn = document.getElementById('nextImageBtn');
+   const prevBtn = document.getElementById('prevImageBtn');
   
    if (!lightbox || !closeBtn) return; // Exit if elements don't exist
   
@@ -828,6 +901,10 @@ function initializeLightboxControls() {
    if (zoomInBtn) zoomInBtn.addEventListener('click', zoomIn);
    if (zoomOutBtn) zoomOutBtn.addEventListener('click', zoomOut);
    if (resetZoomBtn) resetZoomBtn.addEventListener('click', resetImageZoom);
+   
+   // Image navigation
+   if (nextBtn) nextBtn.addEventListener('click', nextLightboxImage);
+   if (prevBtn) prevBtn.addEventListener('click', prevLightboxImage);
 }
 
 // Close on Escape key
